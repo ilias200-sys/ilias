@@ -1,0 +1,1783 @@
+<!DOCTYPE html><html lang="fr" dir="auto"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EFM Mastery - منصة المراجعة الذكية</title>
+    <link href="css/tailwind.min.css" rel="stylesheet">
+    <link href="css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+    --primary-color: #7C3AED;
+    --secondary-color: #F59E42;
+    --accent-color: #FF5A5F;
+    --gradient-start: #F59E42;
+    --gradient-end: #7C3AED;
+    --bg-color: #F3F0FF;
+    --text-color: #22223B;
+    --dark-bg: #1a1a1a;
+    --dark-text: #f0f0f0;
+    --card-shadow: 0 4px 12px rgba(124,58,237,0.08);
+    --card-shadow-hover: 0 8px 24px rgba(245,158,66,0.13);
+    --transition-speed: 0.3s;
+}
+        
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            transition: background-color var(--transition-speed), color var(--transition-speed);
+        }
+        
+        body.dark-mode {
+            --bg-color: var(--dark-bg);
+            --text-color: var(--dark-text);
+            --card-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            --card-shadow-hover: 0 8px 24px rgba(0,0,0,0.3);
+        }
+        
+        .dark-mode .bg-white {
+            background-color: #2a2a2a;
+            color: var(--dark-text);
+        }
+        
+        .dark-mode .text-gray-500, .dark-mode .text-gray-600 {
+            color: #aaaaaa;
+        }
+        
+        .dark-mode .bg-gray-50 {
+            background-color: #333333;
+        }
+        
+        .dark-mode .bg-gray-100 {
+            background-color: #444444;
+        }
+        
+        .dark-mode .border {
+            border-color: #444444;
+        }
+
+        .dark-mode .custom-terminal {
+            background-color: #111111;
+        }
+        
+        .sidebar-item {
+            border-right: 4px solid transparent;
+            transition: all 0.3s;
+        }
+        
+        .sidebar-item:hover, .sidebar-item.active {
+            border-right-color: var(--primary-color);
+            background-color: rgba(74, 144, 226, 0.1);
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .progress-bar {
+            height: 8px;
+            background-color: #e0e0e0;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        
+        .progress-bar-fill {
+            height: 100%;
+            background-color: var(--secondary-color);
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+        
+        .badge {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: #e0e0e0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 5px;
+            color: white;
+            font-size: 14px;
+        }
+        
+        .badge.earned {
+            background-color: var(--secondary-color);
+        }
+        
+        .custom-terminal {
+            background-color: #1E1E1E;
+            color: #F8F8F8;
+            border-radius: 6px;
+            padding: 12px;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .custom-terminal pre {
+            margin: 0;
+            white-space: pre-wrap;
+        }
+        
+        .custom-terminal .prompt {
+            color: var(--secondary-color);
+        }
+        
+        .tab-button {
+            padding: 10px 15px;
+            background-color: transparent;
+            border: none;
+            border-bottom: 2px solid transparent;
+            cursor: pointer;
+            transition: all var(--transition-speed);
+            outline: none;
+            position: relative;
+            font-weight: 500;
+        }
+        
+        .tab-button::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 50%;
+            background: linear-gradient(to right, var(--gradient-start), var(--gradient-end));
+            transition: all var(--transition-speed);
+            transform: translateX(-50%);
+        }
+        
+        .tab-button:hover::after {
+            width: 50%;
+        }
+        
+        .tab-button.active::after {
+            width: 80%;
+        }
+        
+        .tab-button.active {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+        
+        .mind-map {
+            border: 1px solid #e0e7ff;
+            border-radius: 16px;
+            background-color: white;
+            padding: 24px;
+            min-height: 300px;
+            box-shadow: var(--card-shadow);
+            transition: all var(--transition-speed);
+        }
+        
+        .mind-map:hover {
+            box-shadow: var(--card-shadow-hover);
+            transform: translateY(-2px);
+        }
+        
+        .text-gradient {
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            background-image: linear-gradient(45deg, var(--gradient-start), var(--gradient-end));
+            display: inline-block;
+        }
+        
+        .dark-mode .mind-map {
+            background-color: #2a2a2a;
+            border-color: #444444;
+        }
+        
+        [dir="rtl"] .sidebar-item {
+            border-right: none;
+            border-left: 4px solid transparent;
+        }
+        
+        [dir="rtl"] .sidebar-item:hover, [dir="rtl"] .sidebar-item.active {
+            border-left-color: var(--primary-color);
+        }
+
+        html[lang="ar"] * {
+            letter-spacing: 0;
+        }
+    /* Quiz Game Styles */
+    .difficulty-btn {
+        @apply flex flex-col items-center justify-center px-6 py-4 bg-white bg-opacity-10 rounded-lg text-white transition-all duration-300;
+    }
+
+    .difficulty-btn:hover {
+        @apply bg-opacity-20 transform scale-105;
+    }
+
+    .difficulty-btn.active {
+        @apply bg-opacity-30 ring-2 ring-white ring-opacity-50;
+    }
+
+    .quiz-option {
+        @apply w-full px-6 py-4 text-white bg-white bg-opacity-10 rounded-lg transition-all duration-300 hover:bg-opacity-20 cursor-pointer text-left;
+    }
+
+    .quiz-option.correct {
+        @apply bg-green-500 bg-opacity-50 hover:bg-opacity-60;
+    }
+
+    .quiz-option.wrong {
+        @apply bg-red-500 bg-opacity-50 hover:bg-opacity-60;
+    }
+
+    @keyframes scale-up-center {
+        0% { transform: scale(0.5); opacity: 0; }
+        100% { transform: scale(1); opacity: 1; }
+    }
+
+    .scale-up-center {
+        animation: scale-up-center 0.3s cubic-bezier(0.390, 0.575, 0.565, 1.000) both;
+    }
+
+    </style>
+    
+    <style>
+        /* Interactive Network Background */
+        .network-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            background: linear-gradient(to bottom right, #1a1f3c, #0f172a);
+            overflow: hidden;
+        }
+
+        .network-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.8;
+        }
+
+        .network-point {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 50%;
+            transition: transform 0.3s ease;
+        }
+
+        .network-point::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 12px;
+            height: 12px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            animation: ripple 2s infinite;
+        }
+
+        @keyframes ripple {
+            0% { transform: translate(-50%, -50%) scale(0); opacity: 1; }
+            100% { transform: translate(-50%, -50%) scale(4); opacity: 0; }
+        }
+
+        .network-point {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 50%;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        }
+
+        .network-line {
+            position: absolute;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .network-canvas {
+                opacity: 0.5;
+            }
+        }
+
+        /* Modern SaaS Interface */
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.15);
+        }
+
+        .network-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .network-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(31, 38, 135, 0.25);
+        }
+
+        .network-icon {
+            background: linear-gradient(45deg, #3B82F6, #60A5FA);
+            -webkit-background-clip: text;
+            color: transparent;
+            transition: transform 0.3s ease;
+        }
+
+        .network-icon:hover {
+            transform: scale(1.1);
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+    <div class="network-bg">
+        <canvas id="networkCanvas" class="network-canvas"></canvas>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const canvas = document.getElementById('networkCanvas');
+            const ctx = canvas.getContext('2d');
+            let width = canvas.width = window.innerWidth;
+            let height = canvas.height = window.innerHeight;
+            
+            const points = [];
+            const numPoints = 100;
+            const connectionDistance = 150;
+            const pointSpeed = 0.5;
+            let mouseX = 0;
+            let mouseY = 0;
+            
+            // Create points
+            for (let i = 0; i < numPoints; i++) {
+                points.push({
+                    x: Math.random() * width,
+                    y: Math.random() * height,
+                    vx: (Math.random() - 0.5) * pointSpeed,
+                    vy: (Math.random() - 0.5) * pointSpeed
+                });
+            }
+            
+            function animate() {
+                ctx.clearRect(0, 0, width, height);
+                
+                // Update and draw points
+                points.forEach(point => {
+                    point.x += point.vx;
+                    point.y += point.vy;
+                    
+                    // Bounce off edges
+                    if (point.x < 0 || point.x > width) point.vx *= -1;
+                    if (point.y < 0 || point.y > height) point.vy *= -1;
+                    
+                    // Draw point
+                    ctx.beginPath();
+                    ctx.arc(point.x, point.y, 2, 0, Math.PI * 2);
+                    ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
+                    ctx.fill();
+                    
+                    // Connect points
+                    points.forEach(otherPoint => {
+                        const dx = otherPoint.x - point.x;
+                        const dy = otherPoint.y - point.y;
+                        const distance = Math.sqrt(dx * dx + dy * dy);
+                        
+                        if (distance < connectionDistance) {
+                            ctx.beginPath();
+                            ctx.moveTo(point.x, point.y);
+                            ctx.lineTo(otherPoint.x, otherPoint.y);
+                            ctx.strokeStyle = `rgba(255, 255, 255, ${0.2 * (1 - distance/connectionDistance)})`;
+                            ctx.stroke();
+                        }
+                    });
+                    
+                    // Connect to mouse
+                    const mouseDistance = Math.sqrt((mouseX - point.x) ** 2 + (mouseY - point.y) ** 2);
+                    if (mouseDistance < connectionDistance * 1.5) {
+                        ctx.beginPath();
+                        ctx.moveTo(point.x, point.y);
+                        ctx.lineTo(mouseX, mouseY);
+                        ctx.strokeStyle = `rgba(255, 255, 255, ${0.3 * (1 - mouseDistance/(connectionDistance * 1.5))})`;
+                        ctx.stroke();
+                    }
+                });
+                
+                requestAnimationFrame(animate);
+            }
+            
+            // Handle window resize
+            window.addEventListener('resize', () => {
+                width = canvas.width = window.innerWidth;
+                height = canvas.height = window.innerHeight;
+            });
+            
+            // Track mouse movement
+            document.addEventListener('mousemove', (e) => {
+                mouseX = e.clientX;
+                mouseY = e.clientY;
+            });
+            
+            animate();
+        });
+    </script>
+    
+
+  
+    <!-- Toolbar (Top Navigation) -->
+    <header class="bg-gradient-to-r from-purple-500 via-pink-500 to-yellow-400 p-6 shadow-xl flex justify-between items-center border-b-4 border-yellow-300">
+        <div class="flex items-center">
+            <img src="ChatGPT Image 7 mai 2025, 02_59_59.png" alt="Logo" class="h-12 w-12 mr-4 rounded-lg glass-effect p-1">
+            <h1 class="text-2xl font-extrabold text-white flex items-center">
+    <span class="bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 rounded-full p-2 mr-2 shadow-lg">
+        <i class="fas fa-graduation-cap fa-lg"></i>
+    </span>
+    EFM Mastery
+    <img src="OFPPT_Logo.png" alt="OFPPT Logo" class="ml-2 h-8 w-8 animate-bounce">
+</h1>
+        </div>
+        <div class="flex items-center space-x-4">
+            <div class="relative">
+                <input type="text" placeholder="🔍 Rechercher..." class="px-4 py-2 bg-white bg-opacity-20 backdrop-filter backdrop-blur-sm border border-white border-opacity-20 rounded-full text-sm w-64 focus:outline-none focus:ring-2 focus:ring-white text-white placeholder-white placeholder-opacity-80">
+                <span class="absolute right-3 top-2.5">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    </svg>
+                </span>
+            </div>
+            <button id="language-toggle" class="px-3 py-1 rounded-md glass-effect text-white hover:bg-white hover:bg-opacity-20 text-sm transition-all duration-300">
+                FR ↔ الدارجة
+            </button>
+            <button id="dark-mode-toggle" class="p-2 rounded-full glass-effect text-white hover:bg-white hover:bg-opacity-20 transition-all duration-300">
+                <i class="fas fa-moon"></i>
+            </button>
+        </div>
+    </header>
+
+    <div class="flex flex-1">
+        <!-- Sidebar -->
+        <div class="w-64 glass-effect p-4 rounded-lg flex flex-col justify-between network-card" style="transition: all var(--transition-speed); backdrop-filter: blur(10px);">
+            <div class="space-y-6">
+                <div>
+                    <h3 class="font-medium text-blue-200 uppercase text-xs tracking-wider mb-2">Menu</h3>
+                    <ul class="space-y-2">
+    <li class="sidebar-item active p-3 rounded-lg cursor-pointer flex items-center space-x-2 bg-gradient-to-r from-blue-500 to-purple-500 bg-opacity-20 backdrop-blur-sm transition-all duration-300 hover:scale-105">
+        <i class="fas fa-terminal text-blue-300"></i>
+        <a href="#" class="block w-full text-white">Linux</a>
+    </li>
+    <li class="sidebar-item p-3 rounded-lg cursor-pointer flex items-center space-x-2 glass-effect transition-all duration-300 hover:scale-105">
+        <i class="fas fa-shield-alt text-blue-300"></i>
+        <a href="#" class="block w-full text-blue-200">Sécurité Réseaux</a>
+    </li>
+
+</ul>
+                </div>
+                
+                
+            </div>
+            
+            <div class="border-t pt-4 mt-6">
+                <div class="flex items-center space-x-2 mb-3 glass-effect p-3 rounded-lg network-card">
+                    <div class="w-10 h-10 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 flex items-center justify-center text-white font-bold shadow-lg">
+                        I
+                    </div>
+                    <div>
+                        <h4 class="font-medium text-white">ILIAS</h4>
+                        <p class="text-xs text-blue-200">Niveau Intermédiaire</p>
+                    </div>
+                </div>
+                
+                <div class="mb-3 glass-effect p-3 rounded-lg network-card">
+                    <div class="flex justify-between text-xs mb-1 text-blue-200">
+                        <span>Progression</span>
+                        <span>65%</span>
+                    </div>
+                    <div class="progress-bar bg-blue-900 bg-opacity-30">
+                        <div class="progress-bar-fill bg-gradient-to-r from-blue-500 to-purple-500" style="width: 65%;"></div>
+                    </div>
+                </div>
+                
+                <div class="glass-effect p-3 rounded-lg network-card">
+                    <h5 class="text-xs font-medium mb-2 text-blue-200">Badges</h5>
+                    <div class="flex space-x-2">
+                        <div class="badge earned bg-gradient-to-r from-blue-500 to-purple-500 shadow-lg" title="Linux Basics">LB</div>
+                        <div class="badge earned bg-gradient-to-r from-blue-500 to-purple-500 shadow-lg" title="Network Security">NS</div>
+                        <div class="badge bg-blue-900 bg-opacity-30" title="Advanced Linux">AL</div>
+                        <div class="badge bg-blue-900 bg-opacity-30" title="Firewall Master">FM</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <main class="flex-1 p-6">
+            <div class="glass-effect rounded-lg p-6 mb-6 transition-all duration-300 network-card" style="backdrop-filter: blur(10px);">
+                <h2 class="text-2xl font-bold mb-6 flex items-center">
+                    <span class="text-gradient bg-clip-text text-transparent bg-gradient-to-r from-blue-300 via-blue-400 to-purple-400 animate-pulse">🔐 CentOS</span>
+    
+                </h2>
+
+
+<!-- Tabs Navigation -->
+
+<!-- Sécurité Réseaux Section (Cloned from Linux) -->
+<!-- Section placeholder for Sécurité Réseaux, to be restored if needed. -->
+<!-- Fin Sécurité Réseaux Section -->
+
+<div class="border-b border-white border-opacity-20 mb-4">
+    <div class="flex flex-wrap">
+        <button class="tab-button active text-white" data-tab="EFM">
+            <i class="fas fa-file-alt mr-2"></i> 📄 EFM
+        </button>
+        <button class="tab-button text-blue-200 hover:text-white" data-tab="mindmap">
+            <i class="fas fa-sitemap mr-2"></i> 🧠 Carte mentale
+        </button>
+        <button class="tab-button text-blue-200 hover:text-white" data-tab="podcast">
+            <i class="fas fa-headphones mr-2"></i> 🎧 Podcast (Darija)
+        </button>
+        <button class="tab-button text-blue-200 hover:text-white" data-tab="video">
+            <i class="fas fa-video mr-2"></i> 🎬 Vidéo
+        </button>
+        <button class="tab-button text-blue-200 hover:text-white" data-tab="summaries">
+            <i class="fas fa-book mr-2"></i> 📚 ملخصات Linux
+        </button>
+        <button class="tab-button text-blue-200 hover:text-white" data-tab="jeux-centos">
+            <i class="fas fa-gamepad mr-2"></i> 🎮 Jeux CentOS
+        </button>
+    </div>
+</div>
+
+<!-- Tab Contents -->
+    <!-- EFM -->
+    <div id="EFM" class="tab-content active">
+        <h3 class="text-xl font-semibold mb-3 text-white">EFM : إدارة الشبكات في CentOS</h3>
+        <p class="mb-3 text-blue-200">اختبر معلوماتك حول إدارة الشبكات (administration réseaux) في CentOS.</p>
+        <div class="mt-4">
+            <h4 class="font-medium mb-2 text-white">Ressources EFM :</h4>
+            <ul class="list-disc list-inside space-y-2 text-blue-200">
+                <li><a href="https://ofppt.info/efms-administration-dun-environnement-linux/" class="text-blue-300 hover:text-white transition-colors duration-300" target="_blank">EFMs Administration d'un environnement Linux - OFPPT</a></li>
+                <li><a href="https://fr.scribd.com/document/652531060/Efm-region-Administration-sous-Linux-Beni-Mellal-Khenifra-5" class="text-blue-300 hover:text-white transition-colors duration-300" target="_blank">EFM Région Béni Mellal-Khénifra - Administration sous Linux</a></li>
+                <li><a href="https://pdfcoffee.com/efm-administration-reseau-sous-linux-pdf-free.html" class="text-blue-300 hover:text-white transition-colors duration-300" target="_blank">EFM Administration Réseau sous Linux - PDF</a></li>
+                <li><a href="https://www.studocu.com/row/document/institut-specialise-de-technologie-appliquee-el-aounia-oujda/infrastructures-digital/efm-adm-linux-casa-settat-fevrier-2023-v2/99233633" class="text-blue-300 hover:text-white transition-colors duration-300" target="_blank">EFM Casa-Settat - Administration Linux (Février 2023)</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Mind Map -->
+                    <div id="podcast" class="tab-content">
+    <h3 class="text-xl font-semibold mb-3 text-white">Podcast</h3>
+    <p class="mb-3 text-blue-200">Écoutez le podcast en darija sur l'administration Linux :</p>
+    <div class="space-y-4">
+        <div class="audio-player glass-effect p-4 rounded-lg">
+            <h4 class="text-lg font-medium mb-2 text-white">30 Questions d'Administration Linux</h4>
+            <audio controls style="width:100%; max-width:500px;">
+                <source src="30 QUESTIONS ADMINISTRATION LINUX.wav" type="audio/wav">
+                <span class="text-blue-200">Votre navigateur ne supporte pas la lecture audio.</span>
+            </audio>
+        </div>
+        <div class="audio-player glass-effect p-4 rounded-lg">
+            <h4 class="text-lg font-medium mb-2 text-white">Questions Théoriques d'Administration Linux</h4>
+            <audio controls style="width:100%; max-width:500px;">
+                <source src="Des Questions Theorique de Administration linux.wav" type="audio/wav">
+                <span class="text-blue-200">Votre navigateur ne supporte pas la lecture audio.</span>
+            </audio>
+        </div>
+    </div>
+</div>
+
+<div id="mindmap" class="tab-content">
+                        <!-- Carte mentale CentOS Q&R -->
+                        <div class="mind-map mt-8 glass-effect">
+                            <h3 class="text-center text-lg font-semibold mb-4 text-white">Carte mentale: Questions & Réponses CentOS</h3>
+                            <div class="flex justify-center">
+                                <img src="cart mentale 50 Q R poue cenos.jpeg" alt="Carte mentale Questions & Réponses CentOS" class="w-full max-w-3xl" />
+                            </div>
+                            <p class="text-center text-sm text-blue-200 mt-4">50 Questions et Réponses sur CentOS</p>
+                        </div>
+
+                        <!-- Carte mentale Linux Services -->
+                        <div class="mind-map mt-8 glass-effect">
+                            <h3 class="text-center text-lg font-semibold mb-4 text-white">Carte mentale: Linux Services</h3>
+                            <div class="flex justify-center">
+                                <img src="images/mindmap-185100b8-de74-4fe6-80d3-1321737b5195.jpeg" alt="Carte mentale Linux Services" class="w-full max-w-3xl" />
+                            </div>
+                            <p class="text-center text-sm text-blue-200 mt-4">Services et configurations Linux</p>
+                        </div>
+                        
+                        <!-- Carte mentale Configuration Réseau -->
+                        <div class="mind-map mt-8 glass-effect">
+                            <h3 class="text-center text-lg font-semibold mb-4 text-white">Carte mentale: Configuration Réseau</h3>
+                            <div class="flex justify-center">
+                                <img src="images/mindmap-b272b4d6-84dc-4675-ad60-ff418dceb3cb.jpeg" alt="Carte mentale Configuration Réseau" class="w-full max-w-3xl" />
+                            </div>
+                            <p class="text-center text-sm text-blue-200 mt-4">Configuration réseau sous Linux</p>
+                        </div>
+                        
+
+
+                    </div>
+
+                    <!-- Video Tutorial -->
+                    <div id="video" class="tab-content">
+                        <h3 class="text-xl font-semibold mb-4">🎬 Tutoriel Vidéo</h3>
+                        <div class="grid grid-cols-1 gap-4">
+                            <div class="relative" style="padding-top: 56.25%">
+                                <iframe
+                                    src="https://www.youtube.com/embed/ZQA3jjYonHQ"
+                                    title="Configuration de base du serveur CENTOS7"
+                                    frameborder="0"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                    allowfullscreen
+                                    class="absolute top-0 left-0 w-full h-full rounded-lg"
+                                ></iframe>
+                            </div>
+                            <div class="relative" style="padding-top: 56.25%">
+                                <iframe
+                                    src="https://www.youtube.com/embed/videoseries?list=PLgShaa6PJwQ7BdjFKxKJVXMDFbZPAk6-D"
+                                    title="Tutoriels CentOS"
+                                    frameborder="0"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                    allowfullscreen
+                                    class="absolute top-0 left-0 w-full h-full rounded-lg"
+                                ></iframe>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-4">
+                            <h4 class="font-medium mb-2">Contenu du tutoriel:</h4>
+                            <div class="bg-gray-50 p-4 rounded-md">
+                                <div class="flex items-center mb-2">
+                                    <div class="rounded-full bg-blue-500 text-white w-6 h-6 flex items-center justify-center mr-2">1</div>
+                                    <p>Introduction à la configuration réseau (00:00 - 01:30)</p>
+                                </div>
+                                <div class="flex items-center mb-2">
+                                    <div class="rounded-full bg-blue-500 text-white w-6 h-6 flex items-center justify-center mr-2">2</div>
+                                    <p>Configuration d'une adresse IP statique (01:30 - 03:45)</p>
+                                </div>
+                                <div class="flex items-center mb-2">
+                                    <div class="rounded-full bg-blue-500 text-white w-6 h-6 flex items-center justify-center mr-2">3</div>
+                                    <p>Configuration du DNS et de la passerelle (03:45 - 07:20)</p>
+                                </div>
+                                <div class="flex items-center mb-2">
+                                    <div class="rounded-full bg-blue-500 text-white w-6 h-6 flex items-center justify-center mr-2">4</div>
+                                    <p>Test de la connectivité réseau (07:20 - 12:10)</p>
+                                </div>
+                                <div class="flex items-center">
+                                    <div class="rounded-full bg-blue-500 text-white w-6 h-6 flex items-center justify-center mr-2">5</div>
+                                    <p>Conseils de sécurité réseau (12:10 - 15:30)</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Summaries: ملخصات Linux -->
+    <!-- Jeux Pratique Administration Réseaux CentOS -->
+<div id="jeux-centos" class="tab-content">
+    <div class="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 p-8 rounded-xl shadow-2xl mb-8">
+        <h2 class="text-3xl font-bold text-white mb-6 flex items-center">
+            <span class="mr-3">🎮</span> Quiz Administration Réseaux Linux
+        </h2>
+        
+        <div class="grid grid-cols-1 gap-6">
+            <!-- Question Container -->
+            <div class="bg-white bg-opacity-10 backdrop-filter backdrop-blur-lg rounded-xl p-6 transform transition-all duration-300 hover:scale-[1.02]">
+                <div class="flex justify-between items-center mb-4">
+                    <div class="text-white text-lg font-semibold">Question <span id="question-number">1</span>/30</div>
+                    <div class="flex items-center space-x-2">
+                        <div class="text-white">Score: <span id="score">0</span></div>
+                        <button id="hint-btn" class="px-4 py-2 bg-yellow-500 hover:bg-yellow-600 text-white rounded-lg transition-colors duration-300">
+                            <i class="fas fa-lightbulb mr-2"></i>Indice
+                        </button>
+                    </div>
+                </div>
+                
+                <div id="question-text" class="text-white text-xl mb-6"></div>
+                
+                <div id="options-container" class="space-y-4">
+                    <!-- Les options seront générées dynamiquement ici -->
+                </div>
+                
+                <div class="mt-6 flex justify-between items-center">
+                    <div id="hint-text" class="text-yellow-300 italic hidden"></div>
+                    <button id="next-btn" class="px-6 py-3 bg-green-500 hover:bg-green-600 text-white rounded-lg transition-colors duration-300 disabled:opacity-50 disabled:cursor-not-allowed">
+                        Question Suivante <i class="fas fa-arrow-right ml-2"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            const questions = [
+                {
+                    question: "Quelle est la commande moderne recommandée pour configurer une interface réseau sous CentOS 7/8 ?",
+                    options: ["ip addr", "nmcli", "ifconfig"],
+                    correct: 1,
+                    hint: "Pensez à l'outil de NetworkManager.",
+                    explanation: "'nmcli' est l'outil moderne recommandé car il offre une interface complète pour gérer les connexions réseau via NetworkManager, avec support pour les configurations persistantes et les profils réseau."
+                },
+                {
+                    question: "Comment vérifier l'état du service SSH ?",
+                    options: ["systemctl status sshd", "ps aux | grep ssh", "netstat -tulpn | grep ssh"],
+                    correct: 0,
+                    hint: "La commande systemctl est l'outil standard pour gérer les services.",
+                    explanation: "'systemctl status sshd' est la commande moderne recommandée sous CentOS car elle fournit des informations détaillées comme l'état du service, les logs récents, le statut d'activation, et les dépendances."
+                },
+                {
+                    question: "Quel fichier contient la configuration DNS principale ?",
+                    options: ["/etc/resolv.conf", "/etc/named.conf", "/etc/dns.conf"],
+                    correct: 0,
+                    hint: "Ce fichier contient les serveurs DNS à utiliser.",
+                    explanation: "Le fichier /etc/resolv.conf est le fichier principal de configuration DNS qui contient les serveurs DNS à utiliser. Il est essentiel pour la résolution des noms de domaine."
+                },
+                {
+                    question: "Quelle commande permet de configurer le pare-feu sous CentOS 7 ?",
+                    options: ["iptables", "ufw", "firewalld", "ipchains"],
+                    correct: 2,
+                    hint: "C'est l'outil de pare-feu par défaut depuis CentOS 7."
+                },
+                {
+                    question: "Comment afficher la table de routage ?",
+                    options: ["netstat -r", "route -n", "ip route show", "Toutes ces réponses"],
+                    correct: 3,
+                    hint: "Plusieurs commandes peuvent afficher ces informations."
+                },
+                {
+                    question: "Quel est le port par défaut du service SSH ?",
+                    options: ["21", "22", "23", "25"],
+                    correct: 1,
+                    hint: "C'est un port bien connu pour les connexions sécurisées."
+                },
+                {
+                    question: "Comment redémarrer le service réseau ?",
+                    options: ["service network restart", "systemctl restart network", "systemctl restart NetworkManager", "B et C sont correctes"],
+                    correct: 3,
+                    hint: "Pensez aux différentes méthodes de gestion des services."
+                },
+                {
+                    question: "Quel outil permet de tester la connectivité réseau ?",
+                    options: ["ping", "traceroute", "nslookup", "Toutes ces réponses"],
+                    correct: 3,
+                    hint: "Plusieurs outils sont disponibles pour différents types de tests."
+                },
+                {
+                    question: "Où se trouve la configuration des interfaces réseau sous CentOS ?",
+                    options: ["/etc/network/", "/etc/sysconfig/network-scripts/", "/etc/netconfig/", "/etc/interfaces/"],
+                    correct: 1,
+                    hint: "Le dossier contient les fichiers ifcfg-*."
+                },
+                {
+                    question: "Quelle commande affiche les connexions réseau actives ?",
+                    options: ["netstat -an", "ss -tunlp", "lsof -i", "Toutes ces réponses"],
+                    correct: 3,
+                    hint: "Plusieurs commandes peuvent montrer ces informations."
+                },
+                {
+                    question: "Comment configurer une IP statique via nmcli ?",
+                    options: [
+                        "nmcli con mod eth0 ipv4.method manual ipv4.addresses 192.168.1.100/24",
+                        "nmcli dev mod eth0 ip 192.168.1.100/24",
+                        "nmcli set eth0 ip static 192.168.1.100/24",
+                        "nmcli ip set eth0 192.168.1.100/24"
+                    ],
+                    correct: 0,
+                    hint: "La commande doit modifier la connexion, pas directement l'interface."
+                },
+                {
+                    question: "Quel fichier contient les correspondances nom d'hôte - IP ?",
+                    options: ["/etc/hosts", "/etc/hostname", "/etc/resolv.conf", "/etc/networks"],
+                    correct: 0,
+                    hint: "C'est le fichier de résolution de noms local."
+                },
+                {
+                    question: "Comment vérifier les ports ouverts sur le système ?",
+                    options: [
+                        "netstat -tulpn",
+                        "nmap localhost",
+                        "ss -tulpn",
+                        "Toutes ces réponses"
+                    ],
+                    correct: 3,
+                    hint: "Plusieurs outils peuvent lister les ports en écoute."
+                },
+                {
+                    question: "Quelle commande configure temporairement une interface réseau ?",
+                    options: [
+                        "ifconfig eth0 192.168.1.100",
+                        "ip addr add 192.168.1.100/24 dev eth0",
+                        "nmcli dev mod eth0 ip 192.168.1.100",
+                        "A et B sont correctes"
+                    ],
+                    correct: 3,
+                    hint: "Les anciennes et nouvelles commandes peuvent être utilisées."
+                },
+                {
+                    question: "Comment afficher les règles du pare-feu actives ?",
+                    options: [
+                        "firewall-cmd --list-all",
+                        "iptables -L",
+                        "firewalld -l",
+                        "A et B sont correctes"
+                    ],
+                    correct: 3,
+                    hint: "Pensez aux différents outils de pare-feu disponibles."
+                },
+                {
+                    question: "Quel service gère la résolution de noms DNS ?",
+                    options: ["named", "bind", "dns", "A et B sont correctes"],
+                    correct: 3,
+                    hint: "BIND est le serveur DNS le plus courant."
+                },
+                {
+                    question: "Comment tester la résolution DNS ?",
+                    options: [
+                        "nslookup example.com",
+                        "dig example.com",
+                        "host example.com",
+                        "Toutes ces réponses"
+                    ],
+                    correct: 3,
+                    hint: "Plusieurs outils permettent de tester le DNS."
+                },
+                {
+                    question: "Quelle commande affiche la configuration DHCP d'une interface ?",
+                    options: [
+                        "dhclient -v eth0",
+                        "nmcli dev show eth0",
+                        "ip addr show eth0",
+                        "cat /var/lib/dhcp/dhclient.leases"
+                    ],
+                    correct: 1,
+                    hint: "nmcli peut afficher toutes les informations d'une interface."
+                },
+                {
+                    question: "Comment vérifier les connexions établies vers le port 80 ?",
+                    options: [
+                        "netstat -an | grep ':80'",
+                        "ss -tn state established '( dport = :80 )'",
+                        "lsof -i :80",
+                        "Toutes ces réponses"
+                    ],
+                    correct: 3,
+                    hint: "Plusieurs outils peuvent filtrer les connexions par port."
+                },
+                {
+                    question: "Quel fichier configure le comportement du routage IP ?",
+                    options: [
+                        "/proc/sys/net/ipv4/ip_forward",
+                        "/etc/sysctl.conf",
+                        "/etc/network/routing",
+                        "A et B sont correctes"
+                    ],
+                    correct: 3,
+                    hint: "Le routage peut être configuré temporairement ou de façon permanente."
+                },
+                {
+                    question: "Comment configurer une route statique persistante ?",
+                    options: [
+                        "route add default gw 192.168.1.1",
+                        "ip route add default via 192.168.1.1",
+                        "nmcli con mod eth0 +ipv4.routes \"192.168.1.0/24 via 192.168.1.1\"",
+                        "Éditer /etc/sysconfig/network-scripts/route-eth0"
+                    ],
+                    correct: 3,
+                    hint: "La route doit persister après un redémarrage."
+                },
+                {
+                    question: "Quelle commande permet de capturer le trafic réseau ?",
+                    options: [
+                        "tcpdump",
+                        "wireshark",
+                        "tshark",
+                        "Toutes ces réponses"
+                    ],
+                    correct: 3,
+                    hint: "Plusieurs outils permettent d'analyser le trafic réseau."
+                },
+                {
+                    question: "Comment vérifier l'utilisation de la bande passante par processus ?",
+                    options: [
+                        "nethogs",
+                        "iftop",
+                        "nload",
+                        "A et B sont correctes"
+                    ],
+                    correct: 0,
+                    hint: "Un outil spécifique montre l'utilisation par processus."
+                },
+                {
+                    question: "Quelle commande configure un alias IP sur une interface ?",
+                    options: [
+                        "ifconfig eth0:0 192.168.2.100/24",
+                        "ip addr add 192.168.2.100/24 dev eth0 label eth0:0",
+                        "nmcli con add type ethernet ifname eth0:0 ip4 192.168.2.100/24",
+                        "A et B sont correctes"
+                    ],
+                    correct: 3,
+                    hint: "Les anciennes et nouvelles commandes peuvent créer des alias."
+                },
+                {
+                    question: "Comment vérifier les services écoutant sur le réseau ?",
+                    options: [
+                        "netstat -tulpn",
+                        "ss -tulpn",
+                        "lsof -i -P -n",
+                        "Toutes ces réponses"
+                    ],
+                    correct: 3,
+                    hint: "Plusieurs commandes peuvent lister les services réseau."
+                },
+                {
+                    question: "Quel outil permet de tester la bande passante entre deux hôtes ?",
+                    options: [
+                        "iperf",
+                        "speedtest-cli",
+                        "netperf",
+                        "A et C sont correctes"
+                    ],
+                    correct: 3,
+                    hint: "Certains outils sont spécialisés dans les tests de performance."
+                },
+                {
+                    question: "Comment configurer un serveur DNS secondaire ?",
+                    options: [
+                        "Ajouter une zone slave dans named.conf",
+                        "Configurer le transfert de zone dans le serveur primaire",
+                        "Définir les serveurs NS dans la zone",
+                        "Toutes ces réponses"
+                    ],
+                    correct: 3,
+                    hint: "Plusieurs étapes sont nécessaires pour la réplication DNS."
+                },
+                {
+                    question: "Quelle commande permet de gérer les certificats SSL ?",
+                    options: [
+                        "openssl",
+                        "certutil",
+                        "keytool",
+                        "Toutes ces réponses"
+                    ],
+                    correct: 3,
+                    hint: "Différents outils peuvent gérer les certificats selon le contexte."
+                },
+                {
+                    question: "Comment configurer un pont réseau (bridge) ?",
+                    options: [
+                        "brctl addbr br0",
+                        "nmcli con add type bridge con-name br0",
+                        "ip link add name br0 type bridge",
+                        "Toutes ces réponses"
+                    ],
+                    correct: 3,
+                    hint: "Plusieurs méthodes permettent de créer un pont réseau."
+                },
+                {
+                    question: "Quel fichier configure les paramètres du noyau réseau ?",
+                    options: [
+                        "/etc/sysctl.conf",
+                        "/proc/sys/net/",
+                        "/etc/network/kernel",
+                        "A et B sont correctes"
+                    ],
+                    correct: 3,
+                    hint: "Les paramètres peuvent être configurés de façon temporaire ou permanente."
+                }
+            ];
+
+            let currentQuestion = 0;
+            let score = 0;
+            let answered = false;
+
+            function showQuestion() {
+                const question = questions[currentQuestion];
+                document.getElementById('question-number').textContent = currentQuestion + 1;
+                document.getElementById('question-text').textContent = question.question;
+                
+                const optionsContainer = document.getElementById('options-container');
+                optionsContainer.innerHTML = '';
+                
+                question.options.forEach((option, index) => {
+                    const button = document.createElement('button');
+                    button.className = 'quiz-option w-full px-6 py-4 text-white bg-white bg-opacity-10 rounded-lg transition-all duration-300 hover:bg-opacity-20 text-left';
+                    button.textContent = option;
+                    
+                    button.onclick = () => selectOption(index);
+                    optionsContainer.appendChild(button);
+                });
+                
+                document.getElementById('hint-text').classList.add('hidden');
+                document.getElementById('next-btn').disabled = !answered;
+                answered = false;
+            }
+
+            function selectOption(index) {
+                if (answered) return;
+                
+                const question = questions[currentQuestion];
+                const options = document.querySelectorAll('.quiz-option');
+                
+                options[index].classList.remove('bg-white', 'bg-opacity-10');
+                
+                if (index === question.correct) {
+                    options[index].classList.add('bg-green-500', 'bg-opacity-50');
+                    score++;
+                    document.getElementById('score').textContent = score;
+                    // Afficher le message de correction pour la bonne réponse
+                    const feedbackDiv = document.createElement('div');
+                    feedbackDiv.className = 'mt-4 p-4 bg-green-100 text-green-700 rounded-lg';
+                    feedbackDiv.innerHTML = `
+                        <div class="flex items-center">
+                            <i class="fas fa-check-circle text-2xl mr-2"></i>
+                            <div>
+                                <p class="font-bold">Excellent! Réponse correcte (+1 point)</p>
+                                <p class="mt-1">${question.explanation || 'Cette réponse est la meilleure option car elle correspond aux bonnes pratiques de l\'administration système.'}</p>
+                            </div>
+                        </div>
+                    `;
+                    document.getElementById('options-container').appendChild(feedbackDiv);
+                } else {
+                    options[index].classList.add('bg-red-500', 'bg-opacity-50');
+                    options[question.correct].classList.add('bg-green-500', 'bg-opacity-50');
+                    // Afficher le message de correction pour la mauvaise réponse
+                    const feedbackDiv = document.createElement('div');
+                    feedbackDiv.className = 'mt-4 p-4 bg-red-100 text-red-700 rounded-lg';
+                    feedbackDiv.innerHTML = `
+                        <div class="flex items-center">
+                            <i class="fas fa-times-circle text-2xl mr-2"></i>
+                            <div>
+                                <p class="font-bold">Pas tout à fait...</p>
+                                <p class="mt-1">La bonne réponse était : ${question.options[question.correct]}</p>
+                                <p class="mt-1">${question.explanation || 'Cette option est préférable car elle suit les standards de l\'administration système.'}</p>
+                            </div>
+                        </div>
+                    `;
+                    document.getElementById('options-container').appendChild(feedbackDiv);
+                }
+                
+                answered = true;
+                document.getElementById('next-btn').disabled = false;
+            }
+
+            document.getElementById('hint-btn').onclick = () => {
+                const hintText = document.getElementById('hint-text');
+                hintText.textContent = questions[currentQuestion].hint;
+                hintText.classList.remove('hidden');
+            };
+
+            document.getElementById('next-btn').onclick = () => {
+                if (!answered) return;
+                
+                currentQuestion++;
+                if (currentQuestion < questions.length) {
+                    showQuestion();
+                } else {
+                    const finalScore = Math.round((score / questions.length) * 100);
+                    document.querySelector('.grid').innerHTML = `
+                        <div class="bg-white bg-opacity-10 backdrop-filter backdrop-blur-lg rounded-xl p-6 text-center">
+                            <h3 class="text-2xl font-bold text-white mb-4">Quiz Terminé !</h3>
+                            <p class="text-xl text-white mb-4">Votre score : ${finalScore}%</p>
+                            <p class="text-white mb-6">${score} réponses correctes sur ${questions.length} questions</p>
+                            <button onclick="location.reload()" class="px-6 py-3 bg-green-500 hover:bg-green-600 text-white rounded-lg transition-colors duration-300">
+                                Recommencer le Quiz
+                            </button>
+                        </div>
+                    `;
+                }
+            };
+
+            // Démarrer le quiz
+            showQuestion();
+        </script>
+        <h2 class="text-3xl font-bold text-white mb-6 flex items-center">
+            <span class="mr-3">🎮</span> Quiz Administration Réseaux CentOS
+        </h2>
+
+        <script>
+        // Questions du quiz par niveau de difficulté
+        const quizQuestions = {
+            facile: [
+                {
+                    question: "Quelle commande permet d'afficher la configuration IP actuelle ?",
+                    options: ["ifconfig", "ip addr", "netstat", "Les deux premières réponses"],
+                    correct: 3,
+                    hint: "Plusieurs commandes peuvent être utilisées pour cette tâche."
+                },
+                {
+                    question: "Comment redémarrer le service réseau sous CentOS ?",
+                    options: ["service network restart", "systemctl restart network", "systemctl restart NetworkManager", "Toutes les réponses"],
+                    correct: 2,
+                    hint: "CentOS utilise systemd comme gestionnaire de services."
+                },
+                {
+                    question: "Quel fichier contient la configuration DNS principale ?",
+                    options: ["/etc/resolv.conf", "/etc/named.conf", "/etc/dns.conf"],
+                    correct: 0,
+                    hint: "Ce fichier contient les serveurs DNS à utiliser.",
+                    explanation: "Le fichier /etc/resolv.conf est le fichier principal de configuration DNS qui contient les serveurs DNS à utiliser. Il est essentiel pour la résolution des noms de domaine."
+                }
+            ],
+            intermediaire: [
+                {
+                    question: "Quelle commande permet de configurer le pare-feu sous CentOS 8 ?",
+                    options: ["iptables", "firewall-cmd", "ufw", "nftables"],
+                    correct: 1,
+                    hint: "CentOS 8 utilise firewalld par défaut."
+                },
+                {
+                    question: "Comment vérifier les ports ouverts et les connexions actives ?",
+                    options: ["netstat -tulpn", "ss -tulpn", "lsof -i", "Toutes les réponses"],
+                    correct: 3,
+                    hint: "Plusieurs outils peuvent être utilisés pour surveiller les connexions."
+                },
+                {
+                    question: "Quel service gère le partage de fichiers Windows sous Linux ?",
+                    options: ["NFS", "Samba", "FTP", "SFTP"],
+                    correct: 1,
+                    hint: "Ce service implémente le protocole SMB/CIFS."
+                }
+            ],
+            difficile: [
+                {
+                    question: "Comment configurer un serveur DHCP avec une plage d'adresses spécifique ?",
+                    options: [
+                        "dhcpd range 192.168.1.100 192.168.1.200",
+                        "Dans /etc/dhcp/dhcpd.conf: range 192.168.1.100 192.168.1.200;",
+                        "dhclient --range 192.168.1.100-200",
+                        "ip dhcp pool RANGE"
+                    ],
+                    correct: 1,
+                    hint: "La configuration se fait dans un fichier spécifique avec une syntaxe précise."
+                },
+                {
+                    question: "Quelle commande permet de configurer un tunnel VPN IPsec ?",
+                    options: [
+                        "ipsec start",
+                        "strongswan up vpn1",
+                        "openvpn --config client.ovpn",
+                        "vpnc config.conf"
+                    ],
+                    correct: 1,
+                    hint: "StrongSwan est souvent utilisé pour les VPNs IPsec sous Linux."
+                },
+                {
+                    question: "Comment configurer une route statique persistante ?",
+                    options: [
+                        "route add default gw 192.168.1.1",
+                        "ip route add 10.0.0.0/24 via 192.168.1.254",
+                        "Ajouter dans /etc/sysconfig/network-scripts/route-<interface>",
+                        "nmcli connection modify eth0 +ipv4.routes \"10.0.0.0/24 192.168.1.254\""
+                    ],
+                    correct: 2,
+                    hint: "Pour une configuration persistante, il faut modifier les fichiers de configuration."
+                }
+            ]
+        };
+
+        let currentLevel = 'facile';
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let canAnswer = true;
+
+        // Initialisation du jeu
+        function initializeQuiz() {
+            // Event listeners pour les boutons de difficulté
+            document.querySelectorAll('.difficulty-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.difficulty-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    currentLevel = btn.dataset.level;
+                    currentQuestionIndex = 0;
+                    score = 0;
+                    displayQuestion();
+                });
+            });
+
+            // Event listener pour le bouton suivant
+            document.getElementById('quiz-next').addEventListener('click', () => {
+                currentQuestionIndex++;
+                if (currentQuestionIndex >= quizQuestions[currentLevel].length) {
+                    currentQuestionIndex = 0;
+                }
+                displayQuestion();
+            });
+
+            displayQuestion();
+        }
+
+        // Affichage de la question courante
+        function displayQuestion() {
+            const question = quizQuestions[currentLevel][currentQuestionIndex];
+            const questionElement = document.getElementById('quiz-question');
+            const optionsElement = document.getElementById('quiz-options');
+            const feedbackElement = document.getElementById('quiz-feedback');
+            const nextButton = document.getElementById('quiz-next');
+            const hintButton = document.getElementById('quiz-hint');
+            
+            // Réinitialisation
+            canAnswer = true;
+            questionElement.textContent = question.question;
+            feedbackElement.className = 'text-center text-xl font-bold mb-4 hidden';
+            nextButton.className = 'hidden px-6 py-3 bg-gradient-to-r from-green-400 to-blue-500 text-white rounded-lg font-bold transform hover:scale-105 transition-all shadow-lg';
+            hintButton.className = 'px-4 py-2 bg-yellow-400 bg-opacity-20 text-yellow-300 rounded-lg font-semibold hover:bg-opacity-30 transition-all';
+            
+            // Mise à jour de la progression
+            document.getElementById('quiz-progress').style.width = `${((currentQuestionIndex + 1) / quizQuestions[currentLevel].length) * 100}%`;
+            document.getElementById('quiz-progress-text').textContent = `${currentQuestionIndex + 1}/${quizQuestions[currentLevel].length}`;
+            document.getElementById('quiz-score').textContent = `${score} points`;
+
+            // Création des options
+            optionsElement.innerHTML = question.options.map((option, index) => `
+                <button class="quiz-option" onclick="checkAnswer(${index})">
+                    ${option}
+                </button>
+            `).join('');
+
+            // Event listener pour l'indice
+            hintButton.onclick = () => {
+                feedbackElement.textContent = `💡 ${question.hint}`;
+                feedbackElement.className = 'text-center text-xl font-bold mb-4 text-yellow-300 scale-up-center';
+            };
+        }
+
+        function checkAnswer(selectedIndex) {
+            if (!canAnswer) return;
+            canAnswer = false;
+            
+            const question = quizQuestions[currentLevel][currentQuestionIndex];
+            const options = document.querySelectorAll('.quiz-option');
+            const feedbackElement = document.getElementById('quiz-feedback');
+            
+            options[question.correct].classList.add('correct');
+            
+            if (selectedIndex === question.correct) {
+                score += 10;
+                feedbackElement.textContent = `✨ Excellent! +10 points`;
+                feedbackElement.className = 'text-center text-xl font-bold mb-4 text-green-300 scale-up-center';
+            } else {
+                options[selectedIndex].classList.add('wrong');
+                feedbackElement.textContent = '❌ Essayez encore!';
+                feedbackElement.className = 'text-center text-xl font-bold mb-4 text-red-300 scale-up-center';
+            }
+            
+            document.getElementById('quiz-score').textContent = `${score} points`;
+            document.getElementById('quiz-next').className = 'px-6 py-3 bg-gradient-to-r from-green-400 to-blue-500 text-white rounded-lg font-bold transform hover:scale-105 transition-all shadow-lg';
+        }
+
+        // Initialisation au chargement de la page
+        document.addEventListener('DOMContentLoaded', initializeQuiz);
+        </script>
+        
+        <!-- Difficulty Selection -->
+        <div class="flex space-x-4 mb-8">
+            <button class="difficulty-btn active" data-level="facile">
+                <span class="text-2xl mb-2">🌱</span>
+                <span>Facile</span>
+            </button>
+            <button class="difficulty-btn" data-level="intermediaire">
+                <span class="text-2xl mb-2">🌿</span>
+                <span>Intermédiaire</span>
+            </button>
+            <button class="difficulty-btn" data-level="difficile">
+                <span class="text-2xl mb-2">🌳</span>
+                <span>Difficile</span>
+            </button>
+        </div>
+
+        <!-- Quiz Container -->
+        <div class="bg-white bg-opacity-10 backdrop-filter backdrop-blur-lg p-6 rounded-lg">
+            <div id="quiz-question" class="text-xl text-white font-semibold mb-6 leading-relaxed"></div>
+            <div id="quiz-options" class="grid grid-cols-1 gap-4 mb-6">
+                <!-- Options will be inserted here -->
+            </div>
+            <div id="quiz-feedback" class="text-center text-xl font-bold mb-4 hidden"></div>
+            
+            <!-- Progress and Score -->
+            <div class="flex justify-between items-center text-white mb-4">
+                <div class="flex items-center space-x-4">
+                    <div class="relative w-48 h-2 bg-gray-200 rounded-full overflow-hidden">
+                        <div id="quiz-progress" class="absolute h-full bg-green-400 transition-all duration-300" style="width: 0%"></div>
+                    </div>
+                    <span id="quiz-progress-text" class="text-sm">0/10</span>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <span class="text-xl">💫</span>
+                    <span id="quiz-score" class="text-xl font-bold">0 points</span>
+                </div>
+            </div>
+
+            <!-- Navigation -->
+            <div class="flex justify-between items-center mt-6">
+                <button id="quiz-hint" class="px-4 py-2 bg-yellow-400 bg-opacity-20 text-yellow-300 rounded-lg font-semibold hover:bg-opacity-30 transition-all hidden">
+                    💡 Indice
+                </button>
+                <button id="quiz-next" class="hidden px-6 py-3 bg-gradient-to-r from-green-400 to-blue-500 text-white rounded-lg font-bold transform hover:scale-105 transition-all shadow-lg">
+                    Question Suivante ⟶
+                </button>
+            </div>
+        </div>
+    </div>>
+    <div id="centos-question" class="mb-4 text-lg font-semibold"></div>
+    <div id="centos-keyboard" class="flex flex-wrap gap-2 justify-center mb-4"></div>
+    <input id="centos-answer" type="text" class="w-full px-4 py-2 border rounded mb-2 text-center text-lg" placeholder="أكتب الإجابة هنا أو استعمل لوحة المفاتيح" autocomplete="off" readonly style="background:#f9fafb;cursor:pointer;">
+    <button id="centos-submit" class="bg-gradient-to-r from-purple-500 to-yellow-400 text-white px-6 py-2 rounded shadow font-bold hover:from-yellow-400 hover:to-purple-500 transition-all">تحقق من الإجابة</button>
+    <div id="centos-feedback" class="mt-4 text-center font-bold"></div>
+    <button id="centos-next" class="hidden mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">سؤال جديد 🔄</button>
+</div>
+
+<style>
+    #centos-keyboard button {
+        background: linear-gradient(90deg, #F59E42 0%, #7C3AED 100%);
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        padding: 10px 18px;
+        font-size: 18px;
+        margin: 2px;
+        cursor: pointer;
+        box-shadow: 0 2px 6px rgba(124,58,237,0.08);
+        transition: background 0.2s, transform 0.2s;
+    }
+    #centos-keyboard button:active {
+        background: linear-gradient(90deg, #7C3AED 0%, #F59E42 100%);
+        transform: scale(0.96);
+    }
+    #centos-answer[readonly] {
+        background: #f9fafb;
+    }
+</style>
+
+<script>
+    // Les questions seront chargées dynamiquement
+    const centosQuestions = []; // Les questions seront chargées dynamiquement
+
+    let currentQuestion = null;
+    let shuffled = [];
+
+    function shuffleQuestions() {
+        shuffled = centosQuestions.sort(() => Math.random() - 0.5);
+    }
+
+    function pickQuestion() {
+        if (shuffled.length === 0) shuffleQuestions();
+        currentQuestion = shuffled.pop();
+        document.getElementById('centos-question').innerText = currentQuestion.q;
+        document.getElementById('centos-answer').value = '';
+        document.getElementById('centos-feedback').innerText = '';
+        document.getElementById('centos-next').classList.add('hidden');
+    }
+
+    // لوحة مفاتيح افتراضية
+    const keyboardLayout = [
+        'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z',
+        '-','*','0','1','2','3','4','5','6','7','8','9',' ','/','.','@','_','ctrl','del'
+    ];
+
+    function renderKeyboard() {
+        const kb = document.getElementById('centos-keyboard');
+        kb.innerHTML = '';
+        keyboardLayout.forEach(key => {
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.innerText = key === 'ctrl' ? '⏎' : (key === 'del' ? '⌫' : key);
+            btn.onclick = () => {
+                const input = document.getElementById('centos-answer');
+                if(key === 'del') {
+                    input.value = input.value.slice(0, -1);
+                } else if(key === 'ctrl') {
+                    document.getElementById('centos-submit').click();
+                } else {
+                    input.value += key;
+                }
+            };
+            kb.appendChild(btn);
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        renderKeyboard();
+        pickQuestion();
+
+        document.getElementById('centos-submit').onclick = function() {
+            const userAns = document.getElementById('centos-answer').value.trim().toLowerCase();
+            const correctAns = currentQuestion.a.trim().toLowerCase();
+            if(userAns === correctAns) {
+                document.getElementById('centos-feedback').innerHTML = '<span style="color:green;">✔️ إجابة صحيحة! ممتاز!</span>';
+                document.getElementById('centos-next').classList.remove('hidden');
+            } else {
+                document.getElementById('centos-feedback').innerHTML = '<span style="color:red;">❌ حاول مرة أخرى أو راجع الدرس!</span>';
+            }
+        };
+
+        document.getElementById('centos-next').onclick = function() {
+            pickQuestion();
+        };
+    });
+</script>
+
+<div id="summaries" class="tab-content">
+        <h3 class="text-xl font-semibold mb-3">📚 ملخصات ومستندات Linux</h3>
+        <ul style="list-style: disc inside; color: #2980b9; font-size: 17px;">
+            <li><a href="TP6_DNS.pdf" download>TP6 DNS</a></li>
+            <li><a href="Resume_Apache.pdf" download>Resume Apache</a></li>
+            <li><a href="Resume_dhcp.pdf" download>Resume DHCP</a></li>
+            <li><a href="Resume_DNS.pdf" download>Resume DNS</a></li>
+            <li><a href="Resume_Samba.pdf" download>Resume Samba</a></li>
+            <li><a href="Rsume_FTP.pdf" download>Resume FTP</a></li>
+            <li><a href="Serveur%20NFS.pdf" download>Serveur NFS</a></li>
+            <li><a href="serveur_Messagerie.pdf" download>Serveur Messagerie</a></li>
+            <li><a href="TD5[1].pdf" download>TD5</a></li>
+            <li><a href="TP1_ConfigDebase_centos8.pdf" download>TP1 Config de base CentOS 8</a></li>
+            <li><a href="TP2-2_Firewalld.pdf" download>TP2-2 Firewalld</a></li>
+            <li><a href="TP3_Configuration_de_base.pdf" download>TP3 Configuration de base</a></li>
+            <li><a href="TP4_DHCP.pdf" download>TP4 DHCP</a></li>
+            <li><a href="configuration%20_Openldap.pdf" download>Configuration OpenLDAP</a></li>
+            <li><a href="Configuration_de_base.pdf" download>Configuration de base</a></li>
+        </ul>
+    </div>
+
+                </div>
+            </div>
+
+            <!-- Quiz Section -->
+
+            
+                    
+
+                    
+
+                    
+
+                </div>
+            </div>
+        </main>
+    </div>
+
+
+
+    <!-- Footer -->
+    <footer class="bg-white p-4 border-t text-sm">
+        <div class="container mx-auto flex flex-col md:flex-row justify-between items-center">
+            <div class="flex items-center space-x-4 mb-4 md:mb-0">
+                <a href="#" class="text-gray-600 hover:text-blue-600">
+                    <i class="fab fa-github"></i> GitHub
+                </a>
+                <a href="#" class="text-gray-600 hover:text-blue-600">
+                    <i class="fab fa-youtube"></i> YouTube
+                </a>
+                <a href="#" class="text-gray-600 hover:text-blue-600">
+                    <i class="fab fa-discord"></i> Discord
+                </a>
+            </div>
+            <div class="text-gray-600">
+                <button class="hover:text-blue-600">
+                    <i class="fas fa-comment-dots mr-1"></i> Suggérer une amélioration
+                </button>
+            </div>
+            <div class="text-gray-600">
+                � 2023 LinuxSaaS - <span class="text-xs">Licence MIT</span>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Tab switching functionality
+            const tabs = document.querySelectorAll('.tab-button');
+            
+            tabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    // Remove active class from all tabs
+                    tabs.forEach(t => t.classList.remove('active'));
+                    
+                    // Add active class to clicked tab
+                    this.classList.add('active');
+                    
+                    // Hide all tab contents
+                    document.querySelectorAll('.tab-content').forEach(content => {
+                        content.classList.remove('active');
+                    });
+                    
+                    // Show selected tab content
+                    const tabId = this.getAttribute('data-tab');
+                    document.getElementById(tabId).classList.add('active');
+                });
+            });
+            
+            // Terminal simulator functionality
+            const commandBtns = document.querySelectorAll('.command-btn');
+            const terminalOutput = document.getElementById('terminal-output');
+            
+            commandBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const command = this.getAttribute('data-command');
+                    
+                    // Get current command span and update it
+                    const userCommand = document.getElementById('user-command');
+                    userCommand.textContent = command;
+                    userCommand.id = ''; // Remove the id so next command doesn't replace this
+                    
+                    // Simulate command execution after a short delay
+                    setTimeout(() => {
+                        let output = '';
+                        
+                        // Simple command responses
+                        if (command === 'ssh -V') {
+                            output = 'OpenSSH_8.2p1 Ubuntu-4ubuntu0.5, OpenSSL 1.1.1f  31 Mar 2020';
+                        } else if (command === 'ssh-keygen -t rsa -b 4096') {
+                            output = 'Generating public/private rsa key pair.\nEnter file in which to save the key (/home/user/.ssh/id_rsa): \nEnter passphrase (empty for no passphrase): \nEnter same passphrase again: \nYour identification has been saved in /home/user/.ssh/id_rsa\nYour public key has been saved in /home/user/.ssh/id_rsa.pub\nThe key fingerprint is:\nSHA256:jdh47Hgdk3/K9dn47Hsks8d7JHDuh48s user@localhost\nThe key\'s randomart image is:\n+---[RSA 4096]----+\n|      o+o.       |\n|     ..*+.       |\n|     .+= o .     |\n|     .+.+ +      |\n|     o+ S .      |\n|    . .= .       |\n|     + ..        |\n|    . +  .       |\n|     . ..        |\n+----[SHA256]-----+';
+                        } else if (command === 'ls -la ~/.ssh') {
+                            output = 'total 20\ndrwx------ 2 user user 4096 Sep 20 15:23 .\ndrwxr-xr-x 20 user user 4096 Sep 20 15:01 ..\n-rw------- 1 user user 3369 Sep 20 15:23 id_rsa\n-rw-r--r-- 1 user user  738 Sep 20 15:23 id_rsa.pub\n-rw-r--r-- 1 user user 1650 Sep 19 09:45 known_hosts';
+                        } else if (command === 'ssh-copy-id user@server') {
+                            output = '/usr/bin/ssh-copy-id: INFO: attempting to log in with the new key(s), to filter out any that are already installed\n/usr/bin/ssh-copy-id: INFO: 1 key(s) remain to be installed -- if you are prompted now it is to install the new keys\nuser@server\'s password: \n\nNumber of key(s) added: 1\n\nNow try logging into the machine, with:   "ssh \'user@server\'"\nand check to make sure that only the key(s) you wanted were added.';
+                        } else if (command === 'ssh -p 2222 user@server') {
+                            output = 'The authenticity of host \'[server]:2222 ([192.168.1.100]:2222)\' can\'t be established.\nECDSA key fingerprint is SHA256:abcdefghijklmnopqrstuvwxyz123456789.\nAre you sure you want to continue connecting (yes/no/[fingerprint])? yes\nWarning: Permanently added \'[server]:2222,[192.168.1.100]:2222\' (ECDSA) to the list of known hosts.\nWelcome to Ubuntu 20.04.3 LTS (GNU/Linux 5.4.0-89-generic x86_64)\n\n * Documentation:  https://help.ubuntu.com\n * Management:     https://landscape.canonical.com\n * Support:        https://ubuntu.com/advantage\n\nLast login: Mon Sep 20 14:23:18 2021 from 192.168.1.101\nuser@server:~$ ';
+                        } else if (command === 'cat /etc/ssh/sshd_config') {
+                            output = '# Package generated configuration file\n# See the sshd_config(5) manpage for details\n\n# What ports, IPs and protocols we listen for\nPort 22\n# Use these options to restrict which interfaces/protocols sshd will bind to\n#ListenAddress ::\n#ListenAddress 0.0.0.0\nProtocol 2\n# HostKeys for protocol version 2\nHostKey /etc/ssh/ssh_host_rsa_key\nHostKey /etc/ssh/ssh_host_dsa_key\nHostKey /etc/ssh/ssh_host_ecdsa_key\nHostKey /etc/ssh/ssh_host_ed25519_key\n\n# Privilege Separation is turned on for security\nUsePrivilegeSeparation yes\n\n# Lifetime and size of ephemeral version 1 server key\nKeyRegenerationInterval 3600\nServerKeyBits 1024\n\n# Logging\nSyslogFacility AUTH\nLogLevel INFO\n\n# Authentication:\nLoginGraceTime 120\nPermitRootLogin no\nStrictModes yes\n\nRSAAuthentication yes\nPubkeyAuthentication yes\n\n# Don\'t read the user\'s ~/.rhosts and ~/.shosts files\nIgnoreRhosts yes\n# For this to work you will also need host keys in /etc/ssh_known_hosts\nRhostsRSAAuthentication no\n# similar for protocol version 2\nHostbasedAuthentication no\n\n# To enable empty passwords, change to yes (NOT RECOMMENDED)\nPermitEmptyPasswords no\n\n# Change to yes to enable challenge-response passwords (beware issues with\n# some PAM modules and threads)\nChallengeResponseAuthentication no\n\n# Change to no to disable tunnelled clear text passwords\nPasswordAuthentication no';
+                        } else {
+                            output = 'Command not recognized in this simulation.';
+                        }
+                        
+                        // Update terminal with new command line
+                        terminalOutput.innerHTML += `<pre>${output}</pre>`;
+                        terminalOutput.innerHTML += `<pre><span class="prompt">user@localhost:~$</span> <span id="user-command">_</span></pre>`;
+                        
+                        // Scroll to bottom
+                        terminalOutput.scrollTop = terminalOutput.scrollHeight;
+                    }, 500);
+                });
+            });
+            
+            // Dark mode toggle
+            const darkModeToggle = document.getElementById('dark-mode-toggle');
+            darkModeToggle.addEventListener('click', function() {
+                document.body.classList.toggle('dark-mode');
+                
+                // Toggle moon/sun icon
+                const icon = darkModeToggle.querySelector('i');
+                if (icon.classList.contains('fa-moon')) {
+                    icon.classList.remove('fa-moon');
+                    icon.classList.add('fa-sun');
+                } else {
+                    icon.classList.remove('fa-sun');
+                    icon.classList.add('fa-moon');
+                }
+            });
+            
+            // Language toggle
+            const langToggle = document.getElementById('language-toggle');
+            langToggle.addEventListener('click', function() {
+                const html = document.documentElement;
+                const currentLang = html.getAttribute('lang');
+                
+                if (currentLang === 'fr' || !currentLang) {
+                    html.setAttribute('lang', 'ar');
+                    html.setAttribute('dir', 'rtl');
+                    langToggle.textContent = 'الدارجة ↔ FR';
+                } else {
+                    html.setAttribute('lang', 'fr');
+                    html.setAttribute('dir', 'ltr');
+                    langToggle.textContent = 'FR ↔ الدارجة';
+                }
+            });
+            
+            // Quiz functionality
+            const quizForm = document.querySelector('button.bg-blue-500');
+            quizForm.addEventListener('click', function() {
+                const correctAnswers = {
+                    'q1': 'q1b',  // 22
+                    'q2': 'q2b',  // Authentification par clé publique/privée
+                    'q3': 'q3b'   // ssh-copy-id
+                };
+                
+                let score = 0;
+                let feedback = '';
+                
+                // Check each question
+                Object.keys(correctAnswers).forEach(q => {
+                    const selected = document.querySelector(`input[name="${q}"]:checked`);
+                    
+                    if (!selected) {
+                        feedback += `Question ${q[1]}: Aucune réponse sélectionnée.\n`;
+                    } else if (selected.id === correctAnswers[q]) {
+                        score++;
+                        feedback += `Question ${q[1]}: Correct! ✅\n`;
+                    } else {
+                        feedback += `Question ${q[1]}: Incorrect. ❌\n`;
+                    }
+                });
+                
+                alert(`Résultat: ${score}/3\n\n${feedback}`);
+            });
+        });
+    // Monica AI API Key
+    window.MONICA_API_KEY = "sk-gCxe5H4JmTsW0ogSw-843D431J6iz8wz-aXYHewd8jkwWTQhX4mwl0eTNPStP0f66VuWbEUFwe3EjRFu5_Sjc0WYBEAd";
+
+    // Mind Map Upload Logic
+    document.addEventListener('DOMContentLoaded', function() {
+        const fileInput = document.getElementById('mindmap-file');
+        const uploadBtn = document.getElementById('upload-mindmap-btn');
+        const previewDiv = document.getElementById('mindmap-preview');
+        let uploadedFile = null;
+
+        fileInput.addEventListener('change', function(e) {
+            uploadedFile = e.target.files[0];
+            previewDiv.innerHTML = '';
+            if (!uploadedFile) return;
+            const fileType = uploadedFile.type;
+            if (fileType.startsWith('image/')) {
+                const img = document.createElement('img');
+                img.src = URL.createObjectURL(uploadedFile);
+                img.className = 'max-w-xs max-h-60 border rounded shadow';
+                previewDiv.appendChild(img);
+            } else if (fileType === 'application/pdf') {
+                const pdf = document.createElement('embed');
+                pdf.src = URL.createObjectURL(uploadedFile);
+                pdf.type = 'application/pdf';
+                pdf.className = 'w-60 h-60 border rounded shadow';
+                previewDiv.appendChild(pdf);
+            } else {
+                previewDiv.textContent = 'Format non supporté.';
+            }
+        });
+        uploadBtn.addEventListener('click', function() {
+            if (!uploadedFile) {
+                alert('Veuillez choisir un fichier à uploader.');
+                return;
+            }
+            alert('Fichier prêt à être utilisé! (Aucune sauvegarde côté serveur dans cette démo)');
+        });
+        // Génération de carte mentale avec Monica AI (démo)
+        const generateBtn = document.getElementById('generate-mindmap-btn');
+        if (generateBtn) {
+            generateBtn.addEventListener('click', function() {
+                alert('Simulation: La génération via Monica AI sera bientôt disponible!\nAPI Key utilisée: ' + (window.MONICA_API_KEY || 'Non définie'));
+                // Ici, vous pouvez intégrer un vrai appel API à Monica AI si besoin.
+            });
+        }
+    });
+    </script>
+
+
+
+        <script>
+    // Create interactive network background
+    function createNetworkBackground() {
+        const bg = document.createElement('div');
+        bg.className = 'network-bg';
+        document.body.appendChild(bg);
+
+        const canvas = document.createElement('canvas');
+        canvas.className = 'network-canvas';
+        bg.appendChild(canvas);
+        const ctx = canvas.getContext('2d');
+
+        // Set canvas size
+        function setCanvasSize() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        setCanvasSize();
+        window.addEventListener('resize', setCanvasSize);
+
+        // Create points
+        const points = [];
+        const numPoints = 100;
+        const connectionDistance = 150;
+        let mouseX = 0;
+        let mouseY = 0;
+
+        for (let i = 0; i < numPoints; i++) {
+            points.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                vx: (Math.random() - 0.5) * 2,
+                vy: (Math.random() - 0.5) * 2
+            });
+        }
+
+        // Track mouse movement
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+        });
+
+        // Animation loop
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Update and draw points
+            points.forEach(point => {
+                // Update position
+                point.x += point.vx;
+                point.y += point.vy;
+
+                // Bounce off edges
+                if (point.x < 0 || point.x > canvas.width) point.vx *= -1;
+                if (point.y < 0 || point.y > canvas.height) point.vy *= -1;
+
+                // Draw point
+                ctx.beginPath();
+                ctx.arc(point.x, point.y, 2, 0, Math.PI * 2);
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
+                ctx.fill();
+
+                // Draw connections
+                points.forEach(otherPoint => {
+                    const dx = otherPoint.x - point.x;
+                    const dy = otherPoint.y - point.y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+
+                    if (distance < connectionDistance) {
+                        ctx.beginPath();
+                        ctx.moveTo(point.x, point.y);
+                        ctx.lineTo(otherPoint.x, otherPoint.y);
+                        ctx.strokeStyle = `rgba(255, 255, 255, ${0.2 * (1 - distance/connectionDistance)})`;
+                        ctx.stroke();
+                    }
+                });
+
+                // Connect to mouse
+                const dx = mouseX - point.x;
+                const dy = mouseY - point.y;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+
+                if (distance < connectionDistance * 1.5) {
+                    ctx.beginPath();
+                    ctx.moveTo(point.x, point.y);
+                    ctx.lineTo(mouseX, mouseY);
+                    ctx.strokeStyle = `rgba(255, 255, 255, ${0.3 * (1 - distance/(connectionDistance * 1.5))})`;
+                    ctx.stroke();
+                }
+            });
+
+            requestAnimationFrame(animate);
+        }
+
+        animate();
+    }
+
+    // Apply glass effect to cards
+    function applyGlassEffect() {
+        document.querySelectorAll('.mind-map').forEach(card => {
+            card.classList.add('glass-effect', 'network-card');
+        });
+        
+        document.querySelectorAll('.fas').forEach(icon => {
+            icon.classList.add('network-icon');
+        });
+    }
+
+    // Initialize effects
+    document.addEventListener('DOMContentLoaded', () => {
+        createNetworkBackground();
+        applyGlassEffect();
+    });
+</script>
+
+</body></html>
